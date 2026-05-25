@@ -1,36 +1,28 @@
 // config/db.js — MySQL Database Connection Pool
-// Uses mysql2/promise for full async/await support
-
 const mysql = require('mysql2/promise');
 
-// ── Database Configuration ────────────────────────────────────
-// 🔧 Update host, user, password to match your MySQL setup
 const dbConfig = {
-  host     : 'localhost',
-  port     : 3306,
-  user     : 'root',          // MySQL username
-  password : 'root',          // MySQL password
-  database : 'antigrav-users',
+  host     : process.env.DB_HOST     || 'localhost',
+  port     : process.env.DB_PORT     || 3306,
+  user     : process.env.DB_USER     || 'root',
+  password : process.env.DB_PASSWORD || 'root',
+  database : process.env.DB_NAME     || 'antigrav-users',
   waitForConnections : true,
   connectionLimit    : 10,
   queueLimit         : 0,
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: true } : undefined,
 };
 
-// Create a connection pool (reuses connections — more efficient)
 const pool = mysql.createPool(dbConfig);
 
-/**
- * Test the database connection on server startup.
- * Exits the process if connection fails.
- */
 const connectDB = async () => {
   try {
     const conn = await pool.getConnection();
-    console.log('✅ MySQL connected  →  database: antigrav-users');
+    console.log(`✅ MySQL connected  →  database: ${dbConfig.database}`);
     conn.release();
   } catch (err) {
     console.error('❌ MySQL connection failed:', err.message);
-    console.error('👉 Check: Is MySQL running? Are credentials correct in config/db.js?');
+    console.error('👉 Check your DB credentials in environment variables.');
     process.exit(1);
   }
 };

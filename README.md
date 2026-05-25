@@ -1,79 +1,100 @@
-# AuthVault — React + Express MVC Auth App
+# 🛡️ AuthVault — Full-Stack Auth App
 
-A full-stack authentication application with Login and Sign-Up forms.
+A modern, production-ready authentication system built with **React + Vite** (frontend) and **Express MVC + MySQL** (backend).
 
-## Project Structure
+## 🌐 Live Demo
+> Deploy on Vercel using the guide below.
+
+---
+
+## ✨ Features
+- 🔐 JWT Authentication
+- 🛡️ bcrypt Password Hashing
+- 🗄️ MySQL Database with Connection Pooling
+- 🧱 MVC Architecture (Express.js)
+- 📱 Fully Responsive Dark Glassmorphism UI
+- 📊 Company Dashboard with Charts & Analytics
+- 🗺️ Multi-page (Home, Features, Pricing, About, Contact, Auth, Dashboard)
+
+---
+
+## 🗂️ Project Structure
 
 ```
 auth-app/
-├── client/     # React (Vite) frontend
-└── server/     # Express.js MVC backend
+├── client/          # React + Vite frontend
+│   ├── src/
+│   │   ├── components/   # Navbar, Footer, LoginForm, SignupForm
+│   │   ├── pages/        # All pages (Home, Dashboard, etc.)
+│   │   └── services/     # API service layer
+│   └── .env.example
+├── server/          # Express MVC backend
+│   ├── config/      # DB + JWT config
+│   ├── controllers/ # Business logic
+│   ├── models/      # Database queries
+│   ├── routes/      # API routes
+│   ├── middleware/  # Auth middleware
+│   ├── database.sql # MySQL schema
+│   └── .env.example
+└── .gitignore
 ```
 
-## Backend MVC Layout
+---
 
-```
-server/
-├── config/
-│   └── jwt.js              # JWT secret & expiry
-├── models/
-│   └── userModel.js        # User data + bcrypt password logic
-├── controllers/
-│   └── authController.js   # register / login / getProfile handlers
-├── routes/
-│   └── authRoutes.js       # Express route definitions
-├── middleware/
-│   └── authMiddleware.js   # JWT Bearer token verification
-└── server.js               # App entry point
-```
+## 🚀 Local Setup
 
-## API Endpoints
+### 1. MySQL Setup
+Run `server/database.sql` in MySQL Workbench to create the database.
 
-| Method | Endpoint              | Access    | Description          |
-|--------|-----------------------|-----------|----------------------|
-| POST   | /api/auth/register    | Public    | Create a new account |
-| POST   | /api/auth/login       | Public    | Login, get JWT       |
-| GET    | /api/auth/profile     | Protected | Get user profile     |
-| GET    | /api/health           | Public    | Health check         |
-
-## Running the App
-
-### 1. Start the Backend Server
-
+### 2. Backend
 ```bash
 cd server
-npm install   # (already done)
-node server.js
-# → http://localhost:5000
+cp .env.example .env    # Fill in your DB credentials
+npm install
+npm start               # Runs on http://localhost:5000
 ```
 
-### 2. Start the Frontend
-
+### 3. Frontend
 ```bash
 cd client
-npm run dev
-# → http://localhost:5173
+npm install
+npm run dev             # Runs on http://localhost:5173
 ```
 
-### 3. Open Browser
+---
 
-Navigate to **http://localhost:5173**
+## ☁️ Deploy on Vercel
 
-## Features
+### Backend
+1. Import `server/` folder as a new Vercel project
+2. Add environment variables (from `.env.example`)
+3. Deploy → copy the URL (e.g. `https://your-api.vercel.app`)
 
-- ✅ Register with name, email, password
-- ✅ Login with email + password
-- ✅ Password strength meter
-- ✅ Show/hide password toggle
-- ✅ JWT authentication (stored in localStorage)
-- ✅ Session restored on page refresh
-- ✅ Protected dashboard after login
-- ✅ Sign out
-- ✅ Glassmorphism dark UI
+### Frontend
+1. Import `client/` folder as a new Vercel project
+2. Add env variable: `VITE_API_URL=https://your-api.vercel.app/api/auth`
+3. Deploy 🎉
 
-## Tech Stack
+---
 
-- **Frontend**: React 18 + Vite + Axios
-- **Backend**: Node.js + Express.js
-- **Auth**: JWT + bcryptjs
-- **Pattern**: MVC (Model-View-Controller)
+## 🔑 Environment Variables
+
+### Backend (`server/.env`)
+| Variable | Description |
+|---|---|
+| `DB_HOST` | MySQL host |
+| `DB_USER` | MySQL username |
+| `DB_PASSWORD` | MySQL password |
+| `DB_NAME` | Database name |
+| `JWT_SECRET` | Secret key for JWT |
+| `FRONTEND_URL` | Your frontend Vercel URL |
+
+### Frontend (`client/.env.local`)
+| Variable | Description |
+|---|---|
+| `VITE_API_URL` | Your backend API URL |
+
+---
+
+## 📄 License
+MIT
