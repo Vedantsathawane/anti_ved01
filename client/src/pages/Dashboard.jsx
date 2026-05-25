@@ -658,6 +658,20 @@ const Dashboard = ({ user, onLogout }) => {
           </div>
         </div>
 
+        {/* Back to Home */}
+        <div style={{ padding:'12px 12px 0' }}>
+          <button
+            id="back-to-home-btn"
+            onClick={() => navigate('/')}
+            style={{ display:'flex', alignItems:'center', gap:8, width:'100%', padding:'10px 12px', borderRadius:10, border:'1px solid var(--border)', background:'rgba(255,255,255,0.04)', color:'var(--text-secondary)', fontFamily:'Inter,sans-serif', fontSize:'0.825rem', fontWeight:500, cursor:'pointer', transition:'all 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.background='rgba(255,255,255,0.08)'; e.currentTarget.style.color='var(--text-primary)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.18)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.04)'; e.currentTarget.style.color='var(--text-secondary)'; e.currentTarget.style.borderColor='var(--border)'; }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back to Home
+          </button>
+        </div>
+
         {/* Nav */}
         <nav style={{ flex:1, padding:'16px 12px', display:'flex', flexDirection:'column', gap:4 }}>
           <p style={{ fontSize:'0.65rem', color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.1em', padding:'4px 8px 8px', fontWeight:700 }}>Main Menu</p>
@@ -710,11 +724,23 @@ const Dashboard = ({ user, onLogout }) => {
           backdropFilter:'blur(16px)',
           borderBottom:'1px solid var(--border)'
         }}>
-          <div>
-            <h2 style={{ fontSize:'1rem', fontWeight:700, textTransform:'capitalize' }}>{activeNav}</h2>
-            <p style={{ fontSize:'0.72rem', color:'var(--text-muted)' }}>
-              {new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
-            </p>
+          <div style={{ display:'flex', alignItems:'center', gap:14 }}>
+            <button
+              id="topbar-home-btn"
+              onClick={() => navigate('/')}
+              title="Back to Home"
+              style={{ width:36, height:36, borderRadius:9, border:'1px solid var(--border)', background:'var(--bg-card)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'var(--text-secondary)', transition:'all 0.15s', flexShrink:0 }}
+              onMouseEnter={e => { e.currentTarget.style.background='rgba(124,58,237,0.15)'; e.currentTarget.style.color='#a78bfa'; e.currentTarget.style.borderColor='rgba(124,58,237,0.4)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='var(--bg-card)'; e.currentTarget.style.color='var(--text-secondary)'; e.currentTarget.style.borderColor='var(--border)'; }}
+            >
+              🏠
+            </button>
+            <div>
+              <h2 style={{ fontSize:'1rem', fontWeight:700, textTransform:'capitalize' }}>{activeNav}</h2>
+              <p style={{ fontSize:'0.72rem', color:'var(--text-muted)' }}>
+                {new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
+              </p>
+            </div>
           </div>
 
           <div style={{ display:'flex', alignItems:'center', gap:12 }}>
