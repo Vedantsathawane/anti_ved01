@@ -1,79 +1,72 @@
-// models/userModel.js — User Model (MySQL)
-// All database queries live here — this is the Model layer in MVC
+// models/userModel.js — All user-related DB queries
+const { pool } = require('../config/db');
+const bcrypt   = require('bcryptjs');
 
-const bcrypt    = require('bcryptjs');
-const { pool }  = require('../config/db');
-
-const UserModel = {
-
-  /**
-   * Find a user by email address.
-   * @param {string} email
-   * @returns {Object|null}
-   */
+const userModel = {
+  // Find user by email (for login)
   async findByEmail(email) {
-    const [rows] = await pool.execute(
-      'SELECT * FROM users WHERE email = ? LIMIT 1',
-      [email.toLowerCase()]
-    );
+    const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
     return rows[0] || null;
   },
 
-  /**
-   * Find a user by their ID.
-   * @param {number} id
-   * @returns {Object|null}
-   */
+  // Find user by ID (for profile/auth)
   async findById(id) {
-    const [rows] = await pool.execute(
-      'SELECT * FROM users WHERE id = ? LIMIT 1',
-      [id]
+    const [rows] = await pool.query(
+      'SELECT id, name, email, role, status, created_at FROM users WHERE id = ?', [id]
     );
     return rows[0] || null;
   },
 
-  /**
-   * Create a new user with a hashed password.
-   * @param {string} name
-   * @param {string} email
-   * @param {string} plainPassword
-   * @returns {Object} The created user (without password)
-   */
-  async create(name, email, plainPassword) {
-    // Hash the password before saving
-    const salt           = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(plainPassword, salt);
-
-    const [result] = await pool.execute(
+  // Create new user
+  async create({ name, email, password }) {
+    const hashed = await bcrypt.hash(password, 10);
+    const [result] = await pool.query(
       'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
-      [name, email.toLowerCase(), hashedPassword]
+      [name, email, hashed]
     );
-
-    // Fetch the newly created user and return without password
-    const newUser = await this.findById(result.insertId);
-    return this.toSafeObject(newUser);
+    return { id: result.insertId, name, email, role: 'user', status: 'active' };
   },
 
-  /**
-   * Compare a plain-text password against the stored hash.
-   * @param {string} plainPassword
-   * @param {string} hashedPassword
-   * @returns {Promise<boolean>}
-   */
-  async validatePassword(plainPassword, hashedPassword) {
-    return bcrypt.compare(plainPassword, hashedPassword);
+  // Get all users (for admin dashboard)
+  async getAll() {
+    const [rows] = await pool.query(
+      'SELECT id, name, email, role, status, created_at FROM users ORDER BY created_at DESC'
+    );
+    return rows;
   },
 
-  /**
-   * Strip the password field before returning user data to the client.
-   * @param {Object} user
-   * @returns {Object}
-   */
-  toSafeObject(user) {
-    if (!user) return null;
-    const { password, ...safeUser } = user;
-    return safeUser;
+  // Update user role or status
+  async update(id, { name, role, status }) {
+    const fields = [];
+    const vals   = [];
+    if (name)   { fields.push('name = ?');   vals.push(name);   }
+    if (role)   { fields.push('role = ?');   vals.push(role);   }
+    if (status) { fields.push('status = ?'); vals.push(status); }
+    if (!fields.length) return null;
+    vals.push(id);
+    await pool.query(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`, vals);
+    return userModel.findById(id);
+  },
+
+  // Delete user
+  async delete(id) {
+    await pool.query('DELETE FROM activity_logs WHERE user_id = ?', [id]);
+    const [result] = await pool.query('DELETE FROM users WHERE id = ?', [id]);
+    return result.affectedRows > 0;
+  },
+
+  // Verify password
+  async verifyPassword(plain, hashed) {
+    return bcrypt.compare(plain, hashed);
+  },
+
+  // Log activity
+  async logActivity({ userId, userName, userEmail, action, type, ip }) {
+    await pool.query(
+      'INSERT INTO activity_logs (user_id, user_name, user_email, action, type, ip_address) VALUES (?, ?, ?, ?, ?, ?)',
+      [userId, userName, userEmail, action, type, ip || '127.0.0.1']
+    );
   },
 };
 
-module.exports = UserModel;
+module.exports = userModel;

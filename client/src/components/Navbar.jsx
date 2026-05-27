@@ -7,11 +7,11 @@ const ShieldIcon = () => (
   </svg>
 );
 
-const Navbar = ({ user, onLogout }) => {
-  const [scrolled, setScrolled]   = useState(false);
-  const [menuOpen, setMenuOpen]   = useState(false);
-  const location  = useLocation();
-  const navigate  = useNavigate();
+const Navbar = ({ user, onLogout, theme, toggleTheme }) => {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -19,7 +19,6 @@ const Navbar = ({ user, onLogout }) => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close menu on route change
   useEffect(() => setMenuOpen(false), [location]);
 
   const isActive = (path) => location.pathname === path ? 'active' : '';
@@ -32,11 +31,11 @@ const Navbar = ({ user, onLogout }) => {
   };
 
   const navLinks = [
-    { to: '/',         label: 'Home' },
+    { to: '/',         label: 'Home'     },
     { to: '/features', label: 'Features' },
-    { to: '/pricing',  label: 'Pricing' },
-    { to: '/about',    label: 'About' },
-    { to: '/contact',  label: 'Contact' },
+    { to: '/pricing',  label: 'Pricing'  },
+    { to: '/about',    label: 'About'    },
+    { to: '/contact',  label: 'Contact'  },
   ];
 
   return (
@@ -62,6 +61,17 @@ const Navbar = ({ user, onLogout }) => {
 
           {/* Desktop Actions */}
           <div className="nav-actions">
+            {/* 🌙 / ☀️ Theme Toggle */}
+            <button
+              id="theme-toggle-btn"
+              className="theme-toggle"
+              onClick={toggleTheme}
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+
             {user ? (
               <>
                 <button className="btn-nav-ghost" onClick={() => navigate('/dashboard')} id="nav-dashboard-btn">
@@ -100,20 +110,29 @@ const Navbar = ({ user, onLogout }) => {
       {/* Mobile Menu */}
       <div className={`nav-mobile-menu${menuOpen ? ' open' : ''}`} id="nav-mobile-menu">
         {navLinks.map((l) => (
-          <Link key={l.to} to={l.to} className={isActive(l.to)}>
-            {l.label}
-          </Link>
+          <Link key={l.to} to={l.to} className={isActive(l.to)}>{l.label}</Link>
         ))}
+        <div className="mobile-actions">
+          {/* Theme toggle in mobile */}
+          <button
+            className="btn-nav-ghost"
+            style={{ flex:1 }}
+            onClick={toggleTheme}
+            id="theme-toggle-mobile"
+          >
+            {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          </button>
+        </div>
         <div className="mobile-actions">
           {user ? (
             <>
-              <button className="btn-nav-ghost" style={{ flex: 1 }} onClick={() => navigate('/dashboard')}>Dashboard</button>
-              <button className="btn-nav-primary" style={{ flex: 1 }} onClick={handleLogout}>Sign Out</button>
+              <button className="btn-nav-ghost" style={{ flex:1 }} onClick={() => navigate('/dashboard')}>Dashboard</button>
+              <button className="btn-nav-primary" style={{ flex:1 }} onClick={handleLogout}>Sign Out</button>
             </>
           ) : (
             <>
-              <button className="btn-nav-ghost" style={{ flex: 1 }} onClick={() => navigate('/auth')}>Sign In</button>
-              <button className="btn-nav-primary" style={{ flex: 1 }} onClick={() => navigate('/auth?tab=signup')}>Get Started</button>
+              <button className="btn-nav-ghost" style={{ flex:1 }} onClick={() => navigate('/auth')}>Sign In</button>
+              <button className="btn-nav-primary" style={{ flex:1 }} onClick={() => navigate('/auth?tab=signup')}>Get Started</button>
             </>
           )}
         </div>

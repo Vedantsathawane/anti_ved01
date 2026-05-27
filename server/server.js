@@ -1,22 +1,23 @@
 // server.js — Express Application Entry Point
+require('dotenv').config();
 const express       = require('express');
 const cors          = require('cors');
 const { connectDB } = require('./config/db');
 const authRoutes    = require('./routes/authRoutes');
+const userRoutes    = require('./routes/userRoutes');
+const statsRoutes   = require('./routes/statsRoutes');
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
 
-// ── Allowed Origins (local + Vercel production) ───────────────
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  process.env.FRONTEND_URL,        // set this in Vercel env vars
+  process.env.FRONTEND_URL,
 ].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (Postman, curl, etc.)
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
     callback(new Error(`CORS: origin ${origin} not allowed`));
@@ -28,35 +29,47 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ── Routes ────────────────────────────────────────────────────
-app.use('/api/auth', authRoutes);
+app.use('/api/auth',  authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/stats', statsRoutes);
 
 app.get('/api/health', (req, res) => {
-  res.json({ success: true, message: 'Server is running ✅', timestamp: new Date().toISOString() });
+  res.json({
+    success: true,
+    message: '✅ AuthVault API is running',
+    timestamp: new Date().toISOString(),
+    endpoints: [
+      'POST /api/auth/register',
+      'POST /api/auth/login',
+      'GET  /api/auth/profile',
+      'GET  /api/users',
+      'PUT  /api/users/:id',
+      'DELETE /api/users/:id',
+      'GET  /api/stats/overview',
+      'GET  /api/stats/monthly',
+      'GET  /api/stats/activity',
+      'GET  /api/stats/traffic',
+      'GET  /api/stats/roles',
+    ],
+  });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found` });
-});
+app.use('*', (req, res) =>
+  res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found` })
+);
 
-// Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ success: false, message: 'Something went wrong!' });
+  res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
-// ── Start Server ──────────────────────────────────────────────
 const startServer = async () => {
   await connectDB();
   app.listen(PORT, () => {
     console.log(`\n🚀 Server running on  http://localhost:${PORT}`);
-    console.log(`📡 API endpoints:`);
-    console.log(`   POST http://localhost:${PORT}/api/auth/register`);
-    console.log(`   POST http://localhost:${PORT}/api/auth/login`);
-    console.log(`   GET  http://localhost:${PORT}/api/auth/profile  (protected)\n`);
+    console.log(`📡 Health check:      http://localhost:${PORT}/api/health\n`);
   });
 };
 
 startServer();
-
 module.exports = app;

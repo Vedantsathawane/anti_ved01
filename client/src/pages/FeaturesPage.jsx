@@ -22,14 +22,25 @@ const FeaturesPage = () => {
     <div className="page">
       {/* Hero */}
       <section className="section" style={{ paddingBottom: 0 }}>
-        <div className="container text-center">
-          <div className="section-label">Features</div>
-          <h1 className="section-title">
-            Built for <span className="text-gradient">Security & Speed</span>
-          </h1>
-          <p className="section-subtitle mx-auto">
-            Every feature is carefully designed for production use — from the database layer to the pixel-perfect UI.
-          </p>
+        <div className="container">
+          <div className="features-image-section">
+            <div>
+              <div className="section-label">Features</div>
+              <h1 className="section-title">
+                Built for <span className="text-gradient">Security & Speed</span>
+              </h1>
+              <p className="section-subtitle" style={{ marginBottom: 32 }}>
+                Every feature is carefully designed for production use — from the database layer to the pixel-perfect UI.
+              </p>
+              <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
+                <span style={{ padding:'6px 16px', background:'rgba(124,58,237,0.12)', border:'1px solid rgba(124,58,237,0.25)', borderRadius:100, fontSize:'0.8rem', color:'var(--primary-light)', fontWeight:500 }}>🔐 JWT Auth</span>
+                <span style={{ padding:'6px 16px', background:'rgba(6,182,212,0.12)',  border:'1px solid rgba(6,182,212,0.25)',  borderRadius:100, fontSize:'0.8rem', color:'var(--accent-light)',   fontWeight:500 }}>🛡️ bcrypt</span>
+                <span style={{ padding:'6px 16px', background:'rgba(16,185,129,0.12)', border:'1px solid rgba(16,185,129,0.25)', borderRadius:100, fontSize:'0.8rem', color:'#6ee7b7', fontWeight:500 }}>🗄️ MySQL</span>
+                <span style={{ padding:'6px 16px', background:'rgba(245,158,11,0.12)', border:'1px solid rgba(245,158,11,0.25)', borderRadius:100, fontSize:'0.8rem', color:'#fcd34d', fontWeight:500 }}>⚡ MVC</span>
+              </div>
+            </div>
+            <img src="/features_illustration.png" alt="AuthVault Tech Features" loading="lazy" />
+          </div>
         </div>
       </section>
 

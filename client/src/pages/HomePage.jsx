@@ -43,36 +43,19 @@ const HomePage = () => {
               🚀 Get Started Free
             </button>
             <button className="btn btn-secondary btn-lg" id="hero-features" onClick={() => navigate('/features')}>
-              See Features
+              See Features →
             </button>
           </div>
 
-          {/* Floating dashboard preview */}
-          <div className="hero-visual">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 20 }}>
-              {[
-                { label: 'Active Users',  val: '2,847',  color: '#7c3aed', icon: '👥' },
-                { label: 'Logins Today',  val: '1,204',  color: '#06b6d4', icon: '🔐' },
-                { label: 'Uptime',        val: '99.9%',  color: '#10b981', icon: '✅' },
-              ].map((s) => (
-                <div key={s.label} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 14, padding: '20px 16px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.07)' }}>
-                  <div style={{ fontSize: '1.6rem', marginBottom: 6 }}>{s.icon}</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: s.color }}>{s.val}</div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 4 }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
-            <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 10, padding: '14px 18px', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#7c3aed,#06b6d4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 700, fontSize: '0.8rem' }}>AV</div>
-              <div>
-                <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>Authenticated Successfully</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>JWT Token issued · Valid for 7 days</div>
-              </div>
-              <div style={{ marginLeft: 'auto', color: '#10b981', fontSize: '1.2rem' }}>✓</div>
-            </div>
+          {/* Hero Image */}
+          <div className="hero-image-wrap">
+            <div className="hero-image-bar" />
+            <img src="/hero_banner.png" alt="AuthVault Security Dashboard" loading="eager" />
+            <div className="hero-image-overlay" />
           </div>
         </div>
       </section>
+
 
       {/* ── Stats ────────────────────────────────────────────── */}
       <section className="section-sm">

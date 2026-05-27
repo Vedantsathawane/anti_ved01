@@ -20,13 +20,13 @@ const protect = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, jwtConfig.secret);
-    const user    = await UserModel.findById(decoded.id);   // now async (MySQL)
+    const user    = await UserModel.findById(decoded.id);
 
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid token. User not found.' });
     }
 
-    req.user = UserModel.toSafeObject(user);
+    req.user = user; // findById already excludes password
     next();
   } catch (err) {
     return res.status(401).json({ success: false, message: 'Invalid or expired token.' });

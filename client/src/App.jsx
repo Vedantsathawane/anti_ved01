@@ -15,14 +15,20 @@ import NotFoundPage from './pages/NotFoundPage';
 
 import './index.css';
 
-// Pages that show Navbar + Footer
-const PUBLIC_PAGES = ['/', '/features', '/pricing', '/about', '/contact', '/auth'];
-
 function App() {
-  const [user, setUser]       = useState(null);
+  const [user,    setUser]    = useState(null);
   const [loading, setLoading] = useState(true);
+  const [theme,   setTheme]   = useState(() => localStorage.getItem('theme') || 'dark');
 
-  // Restore session on mount
+  // Apply theme to <html>
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
+
+  // Restore session
   useEffect(() => {
     try {
       const savedUser  = localStorage.getItem('user');
@@ -63,15 +69,15 @@ function App() {
           path="/dashboard"
           element={
             user
-              ? <Dashboard user={user} onLogout={handleLogout} />
+              ? <Dashboard user={user} onLogout={handleLogout} theme={theme} toggleTheme={toggleTheme} />
               : <Navigate to="/auth" replace />
           }
         />
 
-        {/* All public pages — with Navbar + Footer */}
+        {/* Public pages — with Navbar + Footer */}
         <Route path="*" element={
           <>
-            <Navbar user={user} onLogout={handleLogout} />
+            <Navbar user={user} onLogout={handleLogout} theme={theme} toggleTheme={toggleTheme} />
             <Routes>
               <Route path="/"         element={<HomePage />} />
               <Route path="/features" element={<FeaturesPage />} />
@@ -83,7 +89,7 @@ function App() {
                   ? <Navigate to="/dashboard" replace />
                   : <AuthPage onAuthenticated={handleAuthenticated} />
               } />
-              <Route path="*"         element={<NotFoundPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
             <Footer />
           </>

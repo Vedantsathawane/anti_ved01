@@ -34,7 +34,7 @@ const AboutPage = () => (
     {/* Mission */}
     <section className="section">
       <div className="container">
-        <div className="grid-2" style={{ gap: 48, alignItems: 'center' }}>
+        <div className="grid-2" style={{ gap: 60, alignItems: 'center' }}>
           <div>
             <div className="section-label">Our Mission</div>
             <h2 className="section-title" style={{ fontSize: '2rem' }}>Making Auth Simple, Not Simple-Minded</h2>
@@ -42,27 +42,32 @@ const AboutPage = () => (
               We started AuthVault in 2024 with one goal: eliminate the pain of building authentication from scratch.
               Every project needs auth — but not every developer should have to rebuild it.
             </p>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.75 }}>
+            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: 32 }}>
               Today, thousands of developers use AuthVault to launch faster, safer, and with more confidence.
               We're proud of what we've built and excited about where we're going.
             </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              {[
+                { num: '2024',  lbl: 'Founded'    },
+                { num: '10K+',  lbl: 'Users'      },
+                { num: '50K+',  lbl: 'Logins/Day' },
+                { num: '99.9%', lbl: 'Uptime'     },
+              ].map((s) => (
+                <div key={s.lbl} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '24px 20px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '2rem', fontWeight: 900, background: 'linear-gradient(135deg,var(--primary-light),var(--accent-light))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{s.num}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 6 }}>{s.lbl}</div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-            {[
-              { num: '2024',   lbl: 'Founded' },
-              { num: '10K+',   lbl: 'Users' },
-              { num: '50K+',   lbl: 'Logins/Day' },
-              { num: '99.9%',  lbl: 'Uptime' },
-            ].map((s) => (
-              <div key={s.lbl} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '28px 20px', textAlign: 'center' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 900, background: 'linear-gradient(135deg,var(--primary-light),var(--accent-light))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{s.num}</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 6 }}>{s.lbl}</div>
-              </div>
-            ))}
+          {/* About Team Image */}
+          <div className="about-image-wrap">
+            <img src="/about_team.png" alt="AuthVault Team at work" loading="lazy" />
           </div>
         </div>
       </div>
     </section>
+
 
     {/* Values */}
     <section className="section" style={{ paddingTop: 0 }}>
