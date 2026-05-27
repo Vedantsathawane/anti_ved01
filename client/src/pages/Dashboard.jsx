@@ -294,6 +294,17 @@ const UsersView = () => {
 
   useEffect(() => { fetchUsers(); }, [fetchUsers]);
 
+  const handleToggleRole = async (u, newRole) => {
+    try {
+      await axios.put(`${API}/api/users/${u.id}`, { role: newRole }, authHeaders());
+      setUsers(prev => prev.map(x => x.id === u.id ? { ...x, role: newRole } : x));
+      showToast(`👑 ${u.name} role changed to ${newRole}`);
+    } catch {
+      setUsers(prev => prev.map(x => x.id === u.id ? { ...x, role: newRole } : x));
+      showToast(`👑 ${u.name} role changed to ${newRole} (Local)`);
+    }
+  };
+
   const handleToggleStatus = async (u) => {
     const newStatus = u.status === 'active' ? 'inactive' : 'active';
     try {
@@ -376,10 +387,27 @@ const UsersView = () => {
                   </td>
                   <td style={{ padding:'14px 20px', fontSize:'0.875rem', color:'var(--text-secondary)' }}>{u.email}</td>
                   <td style={{ padding:'14px 20px' }}>
-                    <span style={{ padding:'3px 10px', borderRadius:6, fontSize:'0.72rem', fontWeight:600,
-                      background: u.role==='admin'?'rgba(124,58,237,0.15)':u.role==='manager'?'rgba(6,182,212,0.15)':'rgba(255,255,255,0.05)',
-                      color: u.role==='admin'?'#a78bfa':u.role==='manager'?'#67e8f9':'var(--text-secondary)',
-                      textTransform:'capitalize' }}>{u.role}</span>
+                    <select
+                      value={u.role}
+                      onChange={(e) => handleToggleRole(u, e.target.value)}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: 6,
+                        fontSize: '0.72rem',
+                        fontWeight: 600,
+                        background: u.role==='admin'?'rgba(124,58,237,0.15)':u.role==='manager'?'rgba(6,182,212,0.15)':'rgba(255,255,255,0.05)',
+                        color: u.role==='admin'?'#a78bfa':u.role==='manager'?'#67e8f9':'var(--text-secondary)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        cursor: 'pointer',
+                        outline: 'none',
+                        fontFamily: 'Inter, sans-serif',
+                        textTransform: 'capitalize'
+                      }}
+                    >
+                      <option value="user" style={{ background: '#0e0e1c', color: 'var(--text-primary)' }}>User</option>
+                      <option value="manager" style={{ background: '#0e0e1c', color: 'var(--text-primary)' }}>Manager</option>
+                      <option value="admin" style={{ background: '#0e0e1c', color: 'var(--text-primary)' }}>Admin</option>
+                    </select>
                   </td>
                   <td style={{ padding:'14px 20px' }}>
                     <div style={{ display:'flex', alignItems:'center', gap:6 }}>
