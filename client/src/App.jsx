@@ -15,6 +15,40 @@ import NotFoundPage from './pages/NotFoundPage';
 
 import './index.css';
 
+const BubbleBackground = () => {
+  const [bubbles, setBubbles] = useState([]);
+
+  useEffect(() => {
+    // Generate 15 premium floating bubbles with randomized specs
+    const list = Array.from({ length: 15 }).map((_, i) => ({
+      id: i,
+      size: Math.floor(Math.random() * 80) + 30, // 30px to 110px
+      left: Math.random() * 100, // 0% to 100%
+      duration: Math.floor(Math.random() * 10) + 12, // 12s to 22s
+      delay: Math.random() * 8 // 0s to 8s
+    }));
+    setBubbles(list);
+  }, []);
+
+  return (
+    <div className="bubble-container">
+      {bubbles.map((b) => (
+        <div
+          key={b.id}
+          className="bubble"
+          style={{
+            width: `${b.size}px`,
+            height: `${b.size}px`,
+            left: `${b.left}%`,
+            animationDuration: `${b.duration}s`,
+            animationDelay: `${b.delay}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 function App() {
   const [user,    setUser]    = useState(null);
   const [loading, setLoading] = useState(true);
@@ -48,7 +82,7 @@ function App() {
   if (loading) {
     return (
       <>
-        <div className="bg-animated" /><div className="orb orb-1" /><div className="orb orb-2" />
+        <div className="bg-animated" /><BubbleBackground /><div className="orb orb-1" /><div className="orb orb-2" />
         <div style={{ display:'flex', alignItems:'center', justifyContent:'center', minHeight:'100vh' }}>
           <span className="btn-spinner" style={{ width:36, height:36, borderWidth:3 }} />
         </div>
@@ -59,6 +93,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="bg-animated" />
+      <BubbleBackground />
       <div className="orb orb-1" />
       <div className="orb orb-2" />
       <div className="orb orb-3" />
