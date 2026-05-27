@@ -45,7 +45,7 @@
   --accent-light:   #06b6d4;
   --accent-dark:    #0e7490;
 
-  --bg-base:    #f0f2ff;
+  --bg-base:    #faf9f5;
   --bg-surface: rgba(0,0,0,0.02);
   --bg-card:    rgba(255,255,255,0.85);
   --bg-input:   rgba(255,255,255,0.9);
@@ -521,10 +521,10 @@ img { max-width: 100%; display: block; }
 
 /* Light mode overrides: beautiful soft light pink translucent bubbles */
 [data-theme="light"] .bubble {
-  background: radial-gradient(circle at 30% 30%, rgba(236, 72, 153, 0.12), rgba(244, 114, 182, 0.02));
-  border: 1px solid rgba(236, 72, 153, 0.14);
-  box-shadow: 0 8px 32px 0 rgba(236, 72, 153, 0.03),
-              inset 0 4px 8px 0 rgba(255, 255, 255, 0.55);
+  background: radial-gradient(circle at 30% 30%, rgba(236, 72, 153, 0.28), rgba(244, 114, 182, 0.06));
+  border: 1.5px solid rgba(236, 72, 153, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(236, 72, 153, 0.08),
+              inset 0 4px 8px 0 rgba(255, 255, 255, 0.7);
 }
 
 @keyframes floatBubble {
