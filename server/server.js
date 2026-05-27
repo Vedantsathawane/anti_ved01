@@ -19,7 +19,15 @@ const allowedOrigins = [
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
+    
+    // Dynamically allow any localhost port or any Vercel deployment URL
+    const isLocal = origin.startsWith('http://localhost:') || origin.startsWith('https://localhost:');
+    const isVercel = origin.endsWith('.vercel.app');
+    
+    if (isLocal || isVercel || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
     callback(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
