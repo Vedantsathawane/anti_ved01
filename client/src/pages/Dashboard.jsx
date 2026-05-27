@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const API = import.meta.env.VITE_API_URL
   ? import.meta.env.VITE_API_URL.replace('/api/auth', '')
@@ -9,6 +10,42 @@ const API = import.meta.env.VITE_API_URL
 const authHeaders = () => ({
   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
 });
+
+// ── SweetAlert Premium Helpers ──────────────────────────────
+const showSwalToast = (title, icon = 'success') => {
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 2500,
+    timerProgressBar: true,
+    background: isDark ? '#0f0f24' : '#ffffff',
+    color: isDark ? '#f1f5f9' : '#0f172a',
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
+  Toast.fire({ icon, title });
+};
+
+const showSwalConfirm = async (title, text) => {
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const result = await Swal.fire({
+    title,
+    text,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, proceed',
+    cancelButtonText: 'Cancel',
+    background: isDark ? '#0f0f24' : '#ffffff',
+    color: isDark ? '#f1f5f9' : '#0f172a',
+    confirmButtonColor: '#7c3aed',
+    cancelButtonColor: '#ef4444',
+  });
+  return result.isConfirmed;
+};
 
 // ── Icons ─────────────────────────────────────────────────────
 const Icon = ({ d, size = 20 }) => (
@@ -268,7 +305,18 @@ const UsersView = () => {
   const [filter,  setFilter]  = useState('All');
   const [toast,   setToast]   = useState('');
 
-  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
+  const showToast = (msg) => {
+    let icon = 'success';
+    let cleanMsg = msg;
+    if (msg.startsWith('❌') || msg.startsWith('⚠️')) {
+      icon = msg.startsWith('❌') ? 'error' : 'warning';
+      cleanMsg = msg.slice(2).trim();
+    } else if (msg.startsWith('✅') || msg.startsWith('👑') || msg.startsWith('🗑️')) {
+      icon = 'success';
+      cleanMsg = msg.slice(2).trim();
+    }
+    showSwalToast(cleanMsg, icon);
+  };
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -318,7 +366,8 @@ const UsersView = () => {
   };
 
   const handleDelete = async (u) => {
-    if (!confirm(`Delete ${u.name}? This cannot be undone.`)) return;
+    const confirmed = await showSwalConfirm('Are you sure?', `Do you really want to delete ${u.name}? This action cannot be undone.`);
+    if (!confirmed) return;
     try {
       await axios.delete(`${API}/api/users/${u.id}`, authHeaders());
       setUsers(prev => prev.filter(x => x.id !== u.id));
