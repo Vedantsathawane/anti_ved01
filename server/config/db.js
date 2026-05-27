@@ -23,7 +23,7 @@ const connectDB = async () => {
   } catch (err) {
     console.error('❌ MySQL connection failed:', err.message);
     console.error('👉 Check your DB credentials in environment variables.');
-    process.exit(1);
+    // Do not call process.exit(1) on Vercel so the serverless function does not crash on startup
   }
 };
 

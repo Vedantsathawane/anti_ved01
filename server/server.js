@@ -63,13 +63,19 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
-const startServer = async () => {
-  await connectDB();
-  app.listen(PORT, () => {
-    console.log(`\n🚀 Server running on  http://localhost:${PORT}`);
-    console.log(`📡 Health check:      http://localhost:${PORT}/api/health\n`);
-  });
-};
+// Serverless & local startup management
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  const startServer = async () => {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`\n🚀 Server running on  http://localhost:${PORT}`);
+      console.log(`📡 Health check:      http://localhost:${PORT}/api/health\n`);
+    });
+  };
+  startServer();
+} else {
+  // Call DB connection asynchronously in Vercel to prevent blocking function startup
+  connectDB().catch((err) => console.error("Database connection failed in serverless:", err.message));
+}
 
-startServer();
 module.exports = app;
