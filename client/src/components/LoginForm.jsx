@@ -71,9 +71,9 @@ const LoginForm = ({ onSuccess }) => {
     setApiError('');
     try {
       const res = await authService.login(form);
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
-      onSuccess(res.data.user);
+      localStorage.setItem('token', res.token);
+      localStorage.setItem('user', JSON.stringify(res.user));
+      onSuccess(res.user);
     } catch (err) {
       setApiError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {

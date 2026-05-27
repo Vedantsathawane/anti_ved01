@@ -120,10 +120,10 @@ const SignupForm = ({ onSuccess }) => {
         email: form.email,
         password: form.password,
       });
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
+      localStorage.setItem('token', res.token);
+      localStorage.setItem('user', JSON.stringify(res.user));
       setApiSuccess('Account created! Redirecting…');
-      setTimeout(() => onSuccess(res.data.user), 1000);
+      setTimeout(() => onSuccess(res.user), 1000);
     } catch (err) {
       setApiError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
