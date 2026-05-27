@@ -29,6 +29,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ── Routes ────────────────────────────────────────────────────
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: '🚀 Welcome to the AuthVault API!',
+    version: '1.0.0',
+    status: 'operational',
+    documentation: '/api/health'
+  });
+});
+
 app.use('/api/auth',  authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/stats', statsRoutes);
