@@ -8,7 +8,7 @@ const userRoutes    = require('./routes/userRoutes');
 const statsRoutes   = require('./routes/statsRoutes');
 
 const app  = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000; // Force local backend to port 5000 to match frontend alignment
 
 const allowedOrigins = [
   'http://localhost:5173',
